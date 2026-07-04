@@ -1,77 +1,57 @@
-# Barbearia WM — Fechamento de Caixa com Cloudflare D1
+# Barbearia WM — Fechamento de Caixa
 
-Sistema web profissional para substituir comandas em papel, registrar serviços/produtos, calcular comissão dos colaboradores e gerar relatórios diário, semanal e mensal.
-
-## Stack
-
-- React + Vite
-- Cloudflare Pages
-- Cloudflare Pages Functions
-- Cloudflare D1
-- GitHub para deploy automático
+Sistema web responsivo para comandas digitais, fechamento de caixa e relatórios com **GitHub + Cloudflare Pages + Cloudflare D1**.
 
 ## Login inicial
 
 - Usuário: `admin`
 - Senha: `123456`
 
-Altere a senha depois criando outro usuário admin ou editando o registro no D1.
+## Configuração no Cloudflare
 
-## Como subir no GitHub
+### 1. Banco D1
 
-1. Crie um repositório: `barbearia-wm-caixa`
-2. Envie todos os arquivos deste projeto.
-3. No Cloudflare, conecte o repositório em **Workers & Pages > Pages**.
+Banco configurado no projeto:
 
-## Configuração do Cloudflare Pages
+```txt
+Nome: barbearia_wm_db
+Database ID: a8267258-8a0c-408f-8e62-0ffd54acbf09
+Binding: DB
+```
 
-- Framework preset: `Vite`
-- Build command: `npm run build`
-- Output directory: `dist`
+### 2. Criar as tabelas
 
-## Criar banco D1
+No Cloudflare, entre em:
 
-No painel Cloudflare:
+```txt
+Storage & databases → D1 SQLite Database → barbearia_wm_db → Console
+```
 
-`Workers & Pages > D1 > Create database`
+Cole todo o conteúdo do arquivo `schema.sql` e clique em **Execute**.
 
-Nome sugerido:
+### 3. Deploy no Cloudflare Pages
 
-`barbearia_wm_db`
+No Cloudflare Pages, conecte o repositório do GitHub e use:
 
-Depois abra o banco, vá em **Console** e rode o conteúdo do arquivo `schema.sql`.
+```txt
+Build command: npm run build
+Build output directory: dist
+```
 
-## Binding do D1
+O arquivo `wrangler.toml` já está configurado com o D1.
 
-No projeto Pages:
+## Funções incluídas
 
-`Settings > Bindings > Add binding > D1 database`
-
-Configure:
-
-- Variable name: `DB`
-- Database: `barbearia_wm_db`
-
-O nome `DB` precisa ser exatamente esse, porque as Functions usam `env.DB`.
-
-## Wrangler opcional
-
-O arquivo `wrangler.toml` já está preparado. Troque:
-
-`COLE_AQUI_O_DATABASE_ID_DO_D1`
-
-pelo ID real do banco D1.
-
-## Recursos incluídos
-
-- Login real via D1
-- Admin e colaboradores
+- Login de administrador e colaborador
 - Cadastro de colaboradores
-- Percentual individual de comissão
-- Cadastro de serviços/produtos
-- Bebidas sem comissão automaticamente
+- Percentual de comissão individual
+- Cadastro de serviços e bebidas
 - Comanda digital
-- Formas de pagamento: Pix, Dinheiro, Débito, Crédito
+- Bebidas fora da comissão
 - Relatórios diário, semanal e mensal
-- Exportação em PDF pela impressão do navegador
+- Exportação para PDF usando impressão do navegador
 - Layout responsivo para celular, tablet e computador
+
+## Observação importante
+
+Após rodar o `schema.sql`, o painel D1 deve mostrar as tabelas criadas. Se o login não funcionar, confira se o `schema.sql` foi executado no banco correto.
