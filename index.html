@@ -64,6 +64,12 @@
   </div>
 <script>
 let user=null, colaboradores=[], servicos=[], forma='Pix';
+const $ = id => document.getElementById(id);
+const loginEl=$('login'), appEl=$('app');
+const loginUser=$('loginUser'), loginPass=$('loginPass'), loginMsg=$('loginMsg'), who=$('who'), colaborador=$('colaborador'), listaColabs=$('listaColabs'), listaServicos=$('listaServicos'), itens=$('itens');
+const pagamentos=$('pagamentos'), cliente=$('cliente'), totalComanda=$('totalComanda'), cNome=$('cNome'), cUsuario=$('cUsuario'), cSenha=$('cSenha'), cPerc=$('cPerc'), colabMsg=$('colabMsg');
+const sId=$('sId'), sNome=$('sNome'), sPreco=$('sPreco'), sTipo=$('sTipo'), servFormTitulo=$('servFormTitulo'), servMsg=$('servMsg'), periodo=$('periodo'), periodoTxt=$('periodoTxt');
+const kTotal=$('kTotal'), kServ=$('kServ'), kBeb=$('kBeb'), kCom=$('kCom'), ranking=$('ranking'), ultimas=$('ultimas'), relatorio=$('relatorio');
 const money=v=>(Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const safe=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 async function api(url,opt={}){const r=await fetch(url,{headers:{'content-type':'application/json'},...opt});const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||'Erro na requisição');return data}
