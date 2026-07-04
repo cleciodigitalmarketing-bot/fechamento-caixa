@@ -1,60 +1,28 @@
-# Barbearia WM — Fechamento de Caixa Digital
+# Barbearia WM - Fechamento de Caixa Digital
 
-Versão corrigida para **GitHub + Cloudflare Pages + Cloudflare D1**, sem npm, sem Vite e sem build.
-
-## Importante antes de subir no GitHub
-
-Limpe o repositório antes de enviar esta versão. Remova arquivos antigos como:
-
-- `package.json`
-- `package-lock.json`
-- `vite.config.js`
-- pasta `src`
-- pasta `dist`
-- `node_modules`
-
-Deixe apenas estes arquivos/pastas desta versão:
-
-- `index.html`
-- `assets/`
-- `functions/`
-- `schema.sql`
-- `wrangler.toml`
-- `README.md`
-- `.gitignore`
+Versão atualizada para Cloudflare Pages + Cloudflare D1, sem npm e sem build.
 
 ## Configuração no Cloudflare Pages
 
 - Build command: deixe vazio
-- Build output directory: `.`
-- Binding D1: `DB` apontando para `barbearia_wm_db`
-
-O `wrangler.toml` já está com o D1 ID:
-
-```txt
-a8267258-8a0c-408f-8e62-0ffd54acbf09
-```
+- Build output directory: .
+- D1 Binding: DB apontando para o banco `barbearia_wm_db`
 
 ## Banco D1
 
-No painel Cloudflare:
+Rode o arquivo `schema.sql` no Console do D1 se estiver instalando do zero.
 
-D1 SQLite Database → `barbearia_wm_db` → Console
+Login inicial:
+- usuário: admin
+- senha: 123456
 
-Cole todo o conteúdo do arquivo `schema.sql` e clique em **Execute**.
+## Atualizações desta versão
 
-## Login inicial
-
-Usuário: `admin`
-Senha: `123456`
-
-## O que o sistema faz
-
-- Login de administrador e colaborador
-- Cadastro de colaboradores
-- Cadastro de serviços e bebidas
-- Comanda digital
-- Cálculo automático de comissão
-- Bebidas/produtos sem comissão
-- Relatório diário, semanal e mensal
-- Exportação PDF pela opção imprimir
+- Comanda liberada somente para colaboradores.
+- Administrador cadastra, edita e remove serviços/produtos.
+- Colaborador não digita valor de serviço; o valor vem do cadastro do administrador.
+- Produtos e bebidas ficam fora da comissão automaticamente.
+- Administrador pode limpar ranking e últimas comandas apagando os registros de comandas.
+- Relatórios diário, semanal e mensal com produtividade por colaborador.
+- Relatório para PDF/impressão com logo da barbearia.
+- Layout escuro premium com detalhes dourados e identidade visual de barbearia.
