@@ -14,7 +14,7 @@
       <div class="brand"><img src="/assets/logo-wm.jpeg" alt="Logo Barbearia WM"><h1>Barbearia WM</h1><p>Fechamento de Caixa Digital</p></div>
       <label>Usuário</label><input id="loginUser" value="admin" autocomplete="username">
       <label>Senha</label><input id="loginPass" type="password" value="123456" autocomplete="current-password">
-      <button class="btn" style="width:100%;margin-top:18px" onclick="login()">Entrar</button>
+      <button class="btn" style="width:100%;margin-top:18px" onclick="doLogin()">Entrar</button>
       <div id="loginMsg"></div>
     </div>
   </div>
@@ -68,9 +68,9 @@ const money=v=>(Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:
 const safe=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 async function api(url,opt={}){const r=await fetch(url,{headers:{'content-type':'application/json'},...opt});const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||'Erro na requisição');return data}
 function msg(id,t,ok=false){document.getElementById(id).innerHTML=t?`<div class="${ok?'success':'error'}">${safe(t)}</div>`:''}
-async function login(){try{const data=await api('/api/login',{method:'POST',body:JSON.stringify({usuario:loginUser.value,senha:loginPass.value})});user=data.user;localStorage.setItem('wm_user',JSON.stringify(user));init()}catch(e){msg('loginMsg',e.message)}}
+async function doLogin(){try{const data=await api('/api/login',{method:'POST',body:JSON.stringify({usuario:loginUser.value,senha:loginPass.value})});user=data.user;localStorage.setItem('wm_user',JSON.stringify(user));init()}catch(e){msg('loginMsg',e.message)}}
 function logout(){localStorage.removeItem('wm_user');location.reload()}
-function init(){login.classList.add('hidden');app.classList.remove('hidden');who.textContent=`${user.nome} • ${user.role}`;document.querySelectorAll('.adminOnly').forEach(e=>e.style.display=user.role==='admin'?'':'none');document.querySelectorAll('.colaboradorOnly').forEach(e=>e.style.display=user.role==='colaborador'?'':'none');loadAll(); if(user.role==='colaborador'){document.querySelector('.colaboradorOnly').click()} }
+function init(){loginEl.classList.add('hidden');appEl.classList.remove('hidden');who.textContent=`${user.nome} • ${user.role}`;document.querySelectorAll('.adminOnly').forEach(e=>e.style.display=user.role==='admin'?'':'none');document.querySelectorAll('.colaboradorOnly').forEach(e=>e.style.display=user.role==='colaborador'?'':'none');loadAll(); if(user.role==='colaborador'){document.querySelector('.colaboradorOnly').click()} }
 function show(id,btn){document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active'); if(id==='relatorios') loadRelatorio();}
 async function loadAll(){await Promise.all([loadColabs(),loadServicos(),loadRelatorio()]); if(user?.role==='colaborador'){itens.innerHTML='';addItem(true)}}
 async function loadColabs(){const d=await api('/api/colaboradores');colaboradores=d.items||[];const colabs=colaboradores.filter(c=>c.ativo&&c.role==='colaborador');colaborador.innerHTML=colabs.map(c=>`<option value="${c.id}">${safe(c.nome)} (${c.percentual_comissao}%)</option>`).join(''); if(user?.role==='colaborador'){colaborador.value=user.id} listaColabs.innerHTML=colaboradores.map(c=>`<div class="item"><div><b>${safe(c.nome)}</b> <span class="badge">${safe(c.role)}</span><div class="muted">${safe(c.usuario)} • comissão ${c.percentual_comissao}%</div></div></div>`).join('')||'<p class="muted">Nenhum colaborador.</p>'}
