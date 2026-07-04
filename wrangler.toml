@@ -1,0 +1,8 @@
+name = "barbearia-wm-caixa"
+compatibility_date = "2026-07-04"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "barbearia_wm_db"
+database_id = "COLE_AQUI_O_DATABASE_ID_DO_D1"
