@@ -1,1 +1,89 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Barbearia WM | Fechamento de Caixa</title></head><body><div id="root"></div><script type="module" src="/src/App.jsx"></script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Barbearia WM | Fechamento de Caixa</title>
+  <style>
+    :root{--bg:#f5f7fb;--card:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--dark:#0f172a;--gold:#d7a84b;--green:#16a34a;--red:#dc2626;--blue:#2563eb}*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,select{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:11px 15px;font-weight:800}.btn{background:var(--dark);color:white}.btn2{background:#eef2ff;color:#1e3a8a}.danger{background:#fee2e2;color:#991b1b}.ok{background:#dcfce7;color:#166534}.wrap{max-width:1180px;margin:0 auto;padding:20px}.login{min-height:100vh;display:grid;place-items:center;padding:20px}.login-card{width:100%;max-width:430px;background:var(--card);border:1px solid var(--line);border-radius:28px;padding:28px;box-shadow:0 25px 80px rgba(15,23,42,.12)}.brand{text-align:center;margin-bottom:20px}.brand img{width:130px;border-radius:18px}.brand h1{margin:12px 0 4px;font-size:28px}.brand p{margin:0;color:var(--muted)}label{display:block;font-size:13px;font-weight:800;margin:12px 0 6px}input,select{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 20px;max-width:1180px;margin:0 auto}.top-left{display:flex;align-items:center;gap:12px}.top-left img{width:48px;height:48px;border-radius:12px;object-fit:cover}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0}.tab{background:#fff;color:#111827;border:1px solid var(--line)}.tab.active{background:var(--dark);color:#fff}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 10px 30px rgba(15,23,42,.05)}.kpi span{color:var(--muted);font-size:13px;font-weight:700}.kpi strong{display:block;font-size:28px;margin-top:8px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}.list{display:grid;gap:10px}.item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:#fff}.muted{color:var(--muted)}.row{display:grid;grid-template-columns:1fr 160px 130px;gap:10px;align-items:end;margin-bottom:10px}.hidden{display:none!important}.error{background:#fee2e2;color:#991b1b;border-radius:12px;padding:10px;margin-top:12px}.success{background:#dcfce7;color:#166534;border-radius:12px;padding:10px;margin-top:12px}.right{text-align:right}.pay{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.pay button{background:#f8fafc;color:#111;border:1px solid var(--line)}.pay button.sel{background:#111827;color:#fff}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}.table th{color:var(--muted)}@media(max-width:850px){.grid,.cols{grid-template-columns:1fr}.row{grid-template-columns:1fr}.pay{grid-template-columns:1fr 1fr}.top{align-items:flex-start}.top-actions{display:grid;gap:8px}.wrap{padding:14px}.card{border-radius:18px}}@media print{header,.tabs,.no-print{display:none!important}body{background:#fff}.wrap{max-width:none}.card{box-shadow:none}}
+  </style>
+</head>
+<body>
+  <div id="login" class="login">
+    <div class="login-card">
+      <div class="brand"><img src="/assets/logo-wm.jpeg" alt="Logo Barbearia WM"><h1>Barbearia WM</h1><p>Fechamento de Caixa Digital</p></div>
+      <label>Usuário</label><input id="loginUser" value="admin" autocomplete="username">
+      <label>Senha</label><input id="loginPass" type="password" value="123456" autocomplete="current-password">
+      <button class="btn" style="width:100%;margin-top:18px" onclick="login()">Entrar</button>
+      <div id="loginMsg"></div>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
+    <header><div class="top"><div class="top-left"><img src="/assets/logo-wm.jpeg"><div><b>Barbearia WM</b><div class="muted" id="who"></div></div></div><div class="top-actions"><button class="btn2" onclick="loadAll()">Atualizar</button><button class="danger" onclick="logout()">Sair</button></div></div></header>
+    <main class="wrap">
+      <div class="tabs no-print">
+        <button class="tab active" onclick="show('dashboard',this)">Dashboard</button>
+        <button class="tab" onclick="show('comanda',this)">Nova comanda</button>
+        <button class="tab adminOnly" onclick="show('colabs',this)">Colaboradores</button>
+        <button class="tab adminOnly" onclick="show('servicos',this)">Serviços/Produtos</button>
+        <button class="tab" onclick="show('relatorios',this)">Relatórios</button>
+      </div>
+
+      <section id="dashboard">
+        <div class="grid">
+          <div class="card kpi"><span>Faturamento hoje</span><strong id="kTotal">R$ 0,00</strong></div>
+          <div class="card kpi"><span>Serviços</span><strong id="kServ">R$ 0,00</strong></div>
+          <div class="card kpi"><span>Bebidas</span><strong id="kBeb">R$ 0,00</strong></div>
+          <div class="card kpi"><span>Comissões</span><strong id="kCom">R$ 0,00</strong></div>
+        </div>
+        <div class="cols" style="margin-top:16px"><div class="card"><h3>Ranking de colaboradores</h3><div id="ranking" class="list"></div></div><div class="card"><h3>Últimas comandas</h3><div id="ultimas" class="list"></div></div></div>
+      </section>
+
+      <section id="comanda" class="hidden">
+        <div class="card"><h2>Nova Comanda Digital</h2>
+          <div class="cols"><div><label>Cliente</label><input id="cliente" placeholder="Nome do cliente"></div><div><label>Colaborador</label><select id="colaborador"></select></div></div>
+          <h3>Itens da comanda</h3><div id="itens"></div><button class="btn2" onclick="addItem()">+ Adicionar item</button>
+          <h3>Forma de pagamento</h3><div class="pay" id="pagamentos"></div>
+          <div class="right"><p class="muted">Bebidas não entram na comissão</p><h2 id="totalComanda">Total: R$ 0,00</h2><button class="btn" onclick="salvarComanda()">Salvar comanda</button></div><div id="comandaMsg"></div>
+        </div>
+      </section>
+
+      <section id="colabs" class="hidden">
+        <div class="cols"><div class="card"><h2>Novo colaborador</h2><label>Nome</label><input id="cNome"><label>Usuário</label><input id="cUsuario"><label>Senha</label><input id="cSenha" type="password"><label>Comissão (%)</label><input id="cPerc" type="number" value="50"><button class="btn" style="margin-top:12px" onclick="salvarColab()">Cadastrar</button><div id="colabMsg"></div></div><div class="card"><h2>Colaboradores</h2><div id="listaColabs" class="list"></div></div></div>
+      </section>
+
+      <section id="servicos" class="hidden">
+        <div class="cols"><div class="card"><h2>Novo serviço/produto</h2><label>Nome</label><input id="sNome"><label>Valor padrão</label><input id="sPreco" type="number" step="0.01" value="0"><label>Tipo</label><select id="sTipo"><option value="servico">Serviço</option><option value="bebida">Bebida/Produto sem comissão</option></select><button class="btn" style="margin-top:12px" onclick="salvarServico()">Cadastrar</button><div id="servMsg"></div></div><div class="card"><h2>Serviços e produtos</h2><div id="listaServicos" class="list"></div></div></div>
+      </section>
+
+      <section id="relatorios" class="hidden">
+        <div class="card"><div class="no-print"><h2>Relatórios</h2><div class="cols"><div><label>Período</label><select id="periodo" onchange="loadRelatorio()"><option value="dia">Hoje</option><option value="semana">Últimos 7 dias</option><option value="mes">Este mês</option></select></div><div style="align-self:end"><button class="btn2" onclick="window.print()">Exportar PDF / Imprimir</button></div></div></div><h2>Relatório Barbearia WM</h2><div id="relatorio"></div></div>
+      </section>
+    </main>
+  </div>
+<script>
+let user=null, colaboradores=[], servicos=[], forma='Pix';
+const money=v=>(Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+async function api(url,opt={}){const r=await fetch(url,{headers:{'content-type':'application/json'},...opt});const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||'Erro na requisição');return data}
+function msg(id,t,ok=false){document.getElementById(id).innerHTML=t?`<div class="${ok?'success':'error'}">${t}</div>`:''}
+async function login(){try{const data=await api('/api/login',{method:'POST',body:JSON.stringify({usuario:loginUser.value,senha:loginPass.value})});user=data.user;localStorage.setItem('wm_user',JSON.stringify(user));init()}catch(e){msg('loginMsg',e.message)}}
+function logout(){localStorage.removeItem('wm_user');location.reload()}
+function init(){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');who.textContent=`${user.nome} • ${user.role}`;document.querySelectorAll('.adminOnly').forEach(e=>e.style.display=user.role==='admin'?'inline-block':'none');loadAll()}
+function show(id,btn){document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active'); if(id==='relatorios') loadRelatorio();}
+async function loadAll(){await Promise.all([loadColabs(),loadServicos(),loadRelatorio()]); addItem(true)}
+async function loadColabs(){const d=await api('/api/colaboradores');colaboradores=d.items||[];colaborador.innerHTML=colaboradores.filter(c=>c.ativo).map(c=>`<option value="${c.id}">${c.nome} (${c.percentual_comissao}%)</option>`).join('');listaColabs.innerHTML=colaboradores.map(c=>`<div class="item"><div><b>${c.nome}</b><div class="muted">${c.usuario} • ${c.percentual_comissao}%</div></div><span>${c.ativo?'Ativo':'Inativo'}</span></div>`).join('')||'<p class="muted">Nenhum colaborador.</p>'}
+async function loadServicos(){const d=await api('/api/servicos');servicos=d.items||[];listaServicos.innerHTML=servicos.map(s=>`<div class="item"><div><b>${s.nome}</b><div class="muted">${s.tipo} • ${s.comissionavel?'comissionável':'sem comissão'}</div></div><b>${money(s.preco)}</b></div>`).join('')||'<p class="muted">Nenhum serviço.</p>'}
+function addItem(onlyEmpty=false){if(onlyEmpty && itens.children.length) return; const div=document.createElement('div');div.className='row';div.innerHTML=`<div><label>Serviço/produto</label><select onchange="syncPreco(this)"><option value="">Selecione</option>${servicos.map(s=>`<option value="${s.id}" data-preco="${s.preco}" data-tipo="${s.tipo}" data-com="${s.comissionavel}">${s.nome}</option>`).join('')}</select></div><div><label>Valor</label><input type="number" step="0.01" value="0" oninput="calcTotal()"></div><div><button class="danger" onclick="this.closest('.row').remove();calcTotal()">Remover</button></div>`;itens.appendChild(div)}
+function syncPreco(sel){const opt=sel.selectedOptions[0];sel.closest('.row').querySelector('input').value=opt.dataset.preco||0;calcTotal()}
+function calcTotal(){let t=0;document.querySelectorAll('#itens .row input').forEach(i=>t+=Number(i.value)||0);totalComanda.textContent='Total: '+money(t)}
+function setupPay(){pagamentos.innerHTML=['Débito','Crédito','Dinheiro','Pix'].map(p=>`<button onclick="forma='${p}';setupPay()" class="${forma===p?'sel':''}">${p}</button>`).join('')}
+setupPay();
+async function salvarComanda(){try{const items=[...document.querySelectorAll('#itens .row')].map(r=>{const s=r.querySelector('select');const opt=s.selectedOptions[0];return{service_id:Number(s.value)||null,descricao:opt?.textContent||'Item',valor:Number(r.querySelector('input').value)||0,tipo:opt?.dataset.tipo||'servico',comissionavel:Number(opt?.dataset.com||1)}}).filter(i=>i.valor>0); if(!cliente.value||!colaborador.value||!items.length) throw new Error('Informe cliente, colaborador e pelo menos um item.'); await api('/api/comandas',{method:'POST',body:JSON.stringify({cliente:cliente.value,colaborador_id:Number(colaborador.value),forma_pagamento:forma,items})});cliente.value='';itens.innerHTML='';addItem();calcTotal();msg('comandaMsg','Comanda salva com sucesso!',true);loadRelatorio()}catch(e){msg('comandaMsg',e.message)}}
+async function salvarColab(){try{await api('/api/colaboradores',{method:'POST',body:JSON.stringify({nome:cNome.value,usuario:cUsuario.value,senha:cSenha.value,percentual_comissao:Number(cPerc.value)||50})});cNome.value=cUsuario.value=cSenha.value='';msg('colabMsg','Colaborador cadastrado!',true);loadColabs()}catch(e){msg('colabMsg',e.message)}}
+async function salvarServico(){try{await api('/api/servicos',{method:'POST',body:JSON.stringify({nome:sNome.value,preco:Number(sPreco.value)||0,tipo:sTipo.value,comissionavel:sTipo.value==='bebida'?0:1})});sNome.value='';sPreco.value=0;msg('servMsg','Serviço cadastrado!',true);loadServicos()}catch(e){msg('servMsg',e.message)}}
+async function loadRelatorio(){try{const d=await api('/api/relatorios?periodo='+(periodo?.value||'dia'));const t=d.totais||{};kTotal.textContent=money(t.total_geral);kServ.textContent=money(t.total_servicos);kBeb.textContent=money(t.total_bebidas);kCom.textContent=money(t.valor_comissao);ranking.innerHTML=(d.por_colaborador||[]).map(r=>`<div class="item"><div><b>${r.colaborador}</b><div class="muted">${r.qtd} comandas</div></div><div class="right"><b>${money(r.total_geral)}</b><div class="muted">Comissão ${money(r.valor_comissao)}</div></div></div>`).join('')||'<p class="muted">Sem dados.</p>';ultimas.innerHTML=(d.comandas||[]).slice(0,8).map(c=>`<div class="item"><div><b>${c.cliente}</b><div class="muted">${c.colaborador} • ${c.forma_pagamento}</div></div><b>${money(c.total_geral)}</b></div>`).join('')||'<p class="muted">Sem comandas.</p>';relatorio.innerHTML=`<div class="grid"><div class="card kpi"><span>Total</span><strong>${money(t.total_geral)}</strong></div><div class="card kpi"><span>Serviços</span><strong>${money(t.total_servicos)}</strong></div><div class="card kpi"><span>Bebidas</span><strong>${money(t.total_bebidas)}</strong></div><div class="card kpi"><span>Comissão</span><strong>${money(t.valor_comissao)}</strong></div></div><h3>Resumo por colaborador</h3><table class="table"><tr><th>Colaborador</th><th>Comandas</th><th>Total</th><th>Comissão</th></tr>${(d.por_colaborador||[]).map(r=>`<tr><td>${r.colaborador}</td><td>${r.qtd}</td><td>${money(r.total_geral)}</td><td>${money(r.valor_comissao)}</td></tr>`).join('')}</table>`}catch(e){console.error(e)}}
+const saved=localStorage.getItem('wm_user'); if(saved){user=JSON.parse(saved);init()}
+</script>
+</body>
+</html>
