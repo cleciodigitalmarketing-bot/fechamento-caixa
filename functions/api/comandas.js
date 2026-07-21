@@ -1,13 +1,31 @@
 import { json, readJson } from './_utils.js';
 
-export async function onRequestGet({ env }) {
-  const { results } = await env.DB.prepare(
-    `SELECT c.*, u.nome colaborador
+export async function onRequestGet({ request, env }) {
+  const url = new URL(request.url);
+  const colaboradorId = Number(url.searchParams.get('colaborador_id') || 0);
+  const filtro = colaboradorId ? ' WHERE c.colaborador_id = ?' : '';
+  const stmt = env.DB.prepare(
+    `SELECT
+       c.id comanda_id,
+       c.cliente,
+       c.forma_pagamento,
+       c.total_servicos,
+       c.total_bebidas,
+       c.total_geral,
+       c.valor_comissao,
+       c.created_at,
+       u.nome colaborador,
+       ci.descricao servico,
+       ci.valor valor_servico,
+       ci.tipo
      FROM comandas c
      JOIN users u ON u.id=c.colaborador_id
-     ORDER BY c.created_at DESC
-     LIMIT 100`
-  ).all();
+     LEFT JOIN comanda_items ci ON ci.comanda_id=c.id
+     ${filtro}
+     ORDER BY c.created_at DESC, ci.id ASC
+     LIMIT 500`
+  );
+  const { results } = colaboradorId ? await stmt.bind(colaboradorId).all() : await stmt.all();
   return json({ items: results || [] });
 }
 
